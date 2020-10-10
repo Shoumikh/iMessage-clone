@@ -14,7 +14,7 @@ function Login() {
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/5/56/IMessage_logo_%28Apple_Inc.%29.png"
           alt=""
-        />
+        /> 
         <h1>iMessage</h1>
       </div>
 

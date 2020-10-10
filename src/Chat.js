@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./Chat.css";
 import MicIcon from "@material-ui/icons/Mic";
 import { IconButton } from "@material-ui/core";
+import Message from "./Message";
 
 function Chat() {
   const [input, setInput] = useState();
@@ -24,7 +25,9 @@ function Chat() {
 
       {/* chat body */}
       <div className="chat__messages">
-        <h2>I am jilla</h2>
+        <Message />
+        <Message />
+        <Message />
       </div>
 
       <div className="chat__input">
