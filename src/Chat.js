@@ -24,13 +24,8 @@ function Chat() {
 
       {/* chat body */}
       <div className="chat__messages">
-          <h2>I am jilla</h2>
+        <h2>I am jilla</h2>
       </div>
-
-
-
-
-
 
       <div className="chat__input">
         <form>
@@ -42,7 +37,6 @@ function Chat() {
             placeholder="iMessage"
             type="text"
           />
-          {console.log(input)}
           <button onClick={sendMessage}>Send Message</button>
         </form>
         <IconButton>
