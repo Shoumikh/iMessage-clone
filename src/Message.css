@@ -17,12 +17,9 @@
 }
 
 .message > small {
+  color: gray;
   position: absolute;
   right: 0;
   bottom: -5px;
-  font-size: 10px;
-}
-
-.message__avatar {
-    
+  font-size: 8px;
 }

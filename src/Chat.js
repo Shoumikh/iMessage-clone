@@ -1,11 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Chat.css";
 import MicIcon from "@material-ui/icons/Mic";
 import { IconButton } from "@material-ui/core";
 import Message from "./Message";
+import db from "./firebase";
 
 function Chat() {
   const [input, setInput] = useState();
+  const [massages, setMessages] = useState([]);//local state array for messages
+
+//active listener for setting msg to database and listen
+//for any changes in the messages state
+  useEffect(() => {
+    db.collection("messages").onSnapshot((snapshot) => {
+      setMessages(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      );
+    });
+  }, []);
+
   const sendMessage = (e) => {
     e.preventDefault(); //prevents from reloading the page
 
