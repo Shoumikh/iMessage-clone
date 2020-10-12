@@ -31,3 +31,8 @@
 .sidebarChat__info > p {
   font-size: 12px;
 }
+
+.sidebarChat__active {
+  background-color: #3e93fd;
+  color: white;
+}

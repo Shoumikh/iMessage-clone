@@ -1,14 +1,16 @@
 import { Avatar } from "@material-ui/core";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setChat } from "./features/chatSlice";
 import db from "./firebase";
 import "./SidebarChat.css";
+import { selectChatId} from "./features/chatSlice";
 
 function SidebarChat({ id, chatName }) {
   const dispatch = useDispatch(); //for dispatching action into the data layer
   const [chatInfo, setChatInfo] = useState([]);
+  const chatId = useSelector(selectChatId);
 
   useEffect(() => {
     db.collection("chats")
@@ -29,7 +31,7 @@ function SidebarChat({ id, chatName }) {
           })
         );
       }}
-      className="sidebarChat"
+      className={`sidebarChat ${chatId === id && "sidebarChat__active"}`}
     >
       <Avatar src={chatInfo[0]?.photo} />
       <div className="sidebarChat__info">

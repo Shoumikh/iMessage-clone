@@ -1,5 +1,5 @@
 import { Avatar, IconButton } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
+
 import React, { useEffect, useState } from "react";
 import "./Sidebar.css";
 import RateReviewOutlinedIcon from "@material-ui/icons/RateReviewOutlined";
@@ -8,11 +8,15 @@ import db, { auth } from "./firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "./features/userSlice";
 import { selectChatId, selectChatName, setChat } from "./features/chatSlice";
+import Search from "./Search";
+import { selectSearchInput } from "./features/searchSlice";
 
 function Sidebar() {
   const user = useSelector(selectUser); //importing the state
   const [chats, setChats] = useState([]); //a local state array for collecting chats
   const dispatch = useDispatch();
+  const searchInput = useSelector(selectSearchInput);
+  const [filterChats, setFilterChats] = useState([]);
 
   //as soon as the sidebar component loads
   //creating a db of collection
@@ -29,13 +33,27 @@ function Sidebar() {
         }))
       );
     });
+
+    //search functinality
+    if (searchInput?.length > 0) {
+      {
+        console.log("chatname>>>> ", chats?.data?.chatName);
+      }
+      setChats(
+        chats?.data?.filter((i) => {
+          return i?.chatName?.match(searchInput);
+        })
+      );
+    }
   }, []);
 
   //hadles signout
   const handleClick = () => {
     auth.signOut(); //handles sign out
   };
-
+  {
+    console.log(searchInput);
+  }
   //adds chat name to the database and redux store
   const addChat = () => {
     const chatName = prompt("Please Enter chat name");
@@ -56,8 +74,7 @@ function Sidebar() {
         />
 
         <div className="sidebar__input">
-          <SearchIcon />
-          <input placeholder="search" type="text" />
+          <Search />
         </div>
         <IconButton varrient="outlined" className="sidebar__inputButton">
           <RateReviewOutlinedIcon onClick={addChat} />
@@ -66,9 +83,10 @@ function Sidebar() {
       <div className="sidebar__chats">
         {/* for everty single chat in the chats array 
           one StatebarChat componenthas been called */}
-        {chats.map(({ id, data: { chatName } }) => (
+        {chats?.map(({ id, data: { chatName } }) => (
           <SidebarChat key={id} id={id} chatName={chatName} />
         ))}
+        {console.log(chats)}
       </div>
     </div>
   );
