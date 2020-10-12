@@ -52,3 +52,22 @@
 .chat__input > form > button {
   display: none;
 }
+
+.chat__messages {
+  overflow: scroll; /* sets scrollbar effect on chat names */
+}
+
+/* hides bar of the scrolbar in chrome */
+.chat__messages::-webkit-scrollbar {
+  display: none;
+}
+
+.chat__messages {
+  -ms-text-overflow-style: none; /* hides bar on exporer */
+  scrollbar-width: none; /* hides bar on firefox */
+}
+
+.chat__flipMove {
+    display: flex;
+    flex-direction: column-reverse;
+}

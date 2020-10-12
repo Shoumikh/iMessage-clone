@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { selectChatId, selectChatName } from "./features/chatSlice";
 import firebase from "firebase";
 import { selectUser } from "./features/userSlice";
+import FlipMove from "react-flip-move";
 
 function Chat() {
   const [input, setInput] = useState(); //takes what msg user enters
@@ -80,9 +81,11 @@ function Chat() {
 
       {/* for chat messages section */}
       <div className="chat__messages">
-        {messages.map(({ id, data }) => (
-          <Message key={id} contents={data} />
-        ))}
+        <FlipMove className="chat__flipMove">
+          {messages.map(({ id, data }) => (
+            <Message key={id} contents={data} />
+          ))}
+        </FlipMove>
       </div>
 
       {/* for the chat input section */}
