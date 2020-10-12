@@ -9,6 +9,9 @@ import { selectChatId, selectChatName } from "./features/chatSlice";
 import firebase from "firebase";
 import { selectUser } from "./features/userSlice";
 import FlipMove from "react-flip-move";
+import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "emoji-mart";
+import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 
 function Chat() {
   const [input, setInput] = useState(); //takes what msg user enters
@@ -16,6 +19,7 @@ function Chat() {
   const chatName = useSelector(selectChatName); //seclects chat name from chat slice
   const chatId = useSelector(selectChatId); //selects chat Id from chat slice
   const user = useSelector(selectUser);
+  let [emojiSwitch, setEmojiSwitch] = useState(false);
 
   //only triggers when chatId changes
   //for setting msg to database and listen
@@ -57,7 +61,7 @@ function Chat() {
     //then add column
     db.collection("chats").doc(chatId).collection("messages").add({
       //this provides the time of actual server where is no problem for different country time
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      timestamp: firebase.firestore?.FieldValue.serverTimestamp(),
       message: input, //collected from input state
       //all 4 below are colleted from user slice redux
       uid: user.uid,
@@ -67,6 +71,12 @@ function Chat() {
     });
 
     setInput(""); //set the input to nothing after sending message
+  };
+
+  //emoji api function
+  const addEmoji = (e) => {
+    let emoji = e.native;
+    setInput(input + emoji);
   };
 
   return (
@@ -101,6 +111,22 @@ function Chat() {
           />
           <button onClick={sendMessage}>Send Message</button>
         </form>
+        <IconButton
+          onClick={() => {
+            setEmojiSwitch(!emojiSwitch);
+          }}
+        >
+          <InsertEmoticonIcon></InsertEmoticonIcon>
+        </IconButton>
+
+        {emojiSwitch ? (
+          <span className="chat__inputEmojiPicker">
+            <Picker onSelect={addEmoji} />
+          </span>
+        ) : (
+          ""
+        )}
+
         <IconButton>
           <MicIcon className="chat__mic" />
         </IconButton>

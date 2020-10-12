@@ -50,3 +50,7 @@
   background-color: #3e93fd;
   color: white;
 }
+
+.message__sender > .message__photo {
+  display: none;
+}

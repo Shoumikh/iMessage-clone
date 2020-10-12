@@ -4,6 +4,7 @@
   flex: 0.75;
   height: 100vh;
   background-color: white;
+  position: relative;
 }
 
 .chat__header {
@@ -68,6 +69,13 @@
 }
 
 .chat__flipMove {
-    display: flex;
-    flex-direction: column-reverse;
+  display: flex;
+  flex-direction: column-reverse;
 }
+
+.chat__inputEmojiPicker {
+  position: absolute;
+  bottom: 65px;
+  right: 0;
+}
+
