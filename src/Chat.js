@@ -4,48 +4,88 @@ import MicIcon from "@material-ui/icons/Mic";
 import { IconButton } from "@material-ui/core";
 import Message from "./Message";
 import db from "./firebase";
+import { useSelector } from "react-redux";
+import { selectChatId, selectChatName } from "./features/chatSlice";
+import firebase from "firebase";
+import { selectUser } from "./features/userSlice";
 
 function Chat() {
-  const [input, setInput] = useState();
-  const [massages, setMessages] = useState([]);//local state array for messages
+  const [input, setInput] = useState(); //takes what msg user enters
+  const [messages, setMessages] = useState([]); //local state array for messages
+  const chatName = useSelector(selectChatName); //seclects chat name from chat slice
+  const chatId = useSelector(selectChatId); //selects chat Id from chat slice
+  const user = useSelector(selectUser);
 
-//active listener for setting msg to database and listen
-//for any changes in the messages state
+  //only triggers when chatId changes
+  //for setting msg to database and listen
+  //for any changes in the messages state
   useEffect(() => {
-    db.collection("messages").onSnapshot((snapshot) => {
-      setMessages(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data(),
-        }))
-      );
-    });
-  }, []);
+    //if there is a chatID
+    //it will go to chats db which is previously created
+    //grab the chatId from chats db
+    //as we click on the chat room chatId changes and useEffect
+    //loads based on chatId changes
+    //it will create db based on chat id
+    //create message db and order it by timestamp desc
+    //then on any chages inside the message db
+    //it will store it message array state
+    //the id of the msg in db and data
+    if (chatId) {
+      db.collection("chats")
+        .doc(chatId)
+        .collection("messages")
+        .orderBy("timestamp", "desc")
+        .onSnapshot((snapshot) => {
+          setMessages(
+            snapshot.docs.map((doc) => ({
+              id: doc.id,
+              data: doc.data(),
+            }))
+          );
+        });
+    }
+  }, [chatId]);
 
+  //fires in whenever user hits enter after typing a message
   const sendMessage = (e) => {
     e.preventDefault(); //prevents from reloading the page
-
     //firebase works
+    //tells to go to the collection of chats in firebase db
+    //then go to based on current chatId
+    //for that particular chatId goto the db of messages
+    //then add column
+    db.collection("chats").doc(chatId).collection("messages").add({
+      //this provides the time of actual server where is no problem for different country time
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      message: input, //collected from input state
+      //all 4 below are colleted from user slice redux
+      uid: user.uid,
+      photo: user.photo,
+      displayName: user.displayName,
+      email: user.email,
+    });
 
     setInput(""); //set the input to nothing after sending message
   };
 
   return (
     <div className="chat">
+      {/* for the chat header section */}
       <div className="chat__header">
         <h4>
-          To: <span className="chat__channelName">Channel Name</span>
+          To: <span className="chat__channelName">{chatName}</span>
         </h4>
         <strong>Details</strong>
       </div>
 
-      {/* chat body */}
+      {/* for chat messages section */}
       <div className="chat__messages">
-        <Message />
-        <Message />
-        <Message />
+        {messages.map(({ id, data }) => (
+          <Message key={id} contents={data} />
+        ))}
       </div>
 
+      {/* for the chat input section */}
       <div className="chat__input">
         <form>
           <input

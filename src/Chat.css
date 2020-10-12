@@ -25,6 +25,8 @@
 
 .chat__messages {
   flex: 1; /* tells the chat massege div to take most of the spaces*/
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .chat__input {
